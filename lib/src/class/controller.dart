@@ -33,14 +33,15 @@ class ExpandableTableController extends ChangeNotifier {
     notifyListeners();
   }
 
-  late List<ExpandableTableRow> _rows;
+  ///
+  late List<ExpandableTableRow> tableRows;
 
   /// [rows] contains the list of all the rows of the table,
   /// each of these can contain a list of further rows,
   /// this allows you to create nested and expandable rows.
   /// Not to be used if the [controller] is used.
   /// `required`
-  List<ExpandableTableRow> get rows => _rows;
+  List<ExpandableTableRow> get rows => tableRows;
 
   late double _headerHeight;
 
@@ -139,7 +140,7 @@ class ExpandableTableController extends ChangeNotifier {
 
   set rows(List<ExpandableTableRow> value) {
     _removeRowsListener();
-    _rows = value;
+    tableRows = value;
     _addRowsListener();
     notifyListeners();
   }
@@ -154,13 +155,14 @@ class ExpandableTableController extends ChangeNotifier {
     double defaultsColumnWidth = 120,
     double defaultsRowHeight = 50,
   }) {
+    // print("Updating");
     _firstHeaderCell = firstHeaderCell;
     _headerHeight = headerHeight;
     _firstColumnWidth = firstColumnWidth;
     _defaultsColumnWidth = defaultsColumnWidth;
     _defaultsRowHeight = defaultsRowHeight;
     _headers = headers;
-    _rows = rows;
+    tableRows = rows;
     _addHeadersListener();
     _addRowsListener();
     notifyListeners();
@@ -190,7 +192,7 @@ class ExpandableTableController extends ChangeNotifier {
     _defaultsColumnWidth = defaultsColumnWidth;
     _defaultsRowHeight = defaultsRowHeight;
     _headers = headers;
-    _rows = rows;
+    tableRows = rows;
     _addHeadersListener();
     _addRowsListener();
   }
@@ -209,14 +211,14 @@ class ExpandableTableController extends ChangeNotifier {
   }
 
   void _addRowsListener() {
-    for (var i = 0; i < _rows.length; i++) {
-      _rows[i].addListener(_listener);
-      _rows[i].index = i;
+    for (var i = 0; i < tableRows.length; i++) {
+      tableRows[i].addListener(_listener);
+      tableRows[i].index = i;
     }
   }
 
   void _removeRowsListener() {
-    for (var row in _rows) {
+    for (var row in tableRows) {
       row.removeListener(_listener);
     }
   }

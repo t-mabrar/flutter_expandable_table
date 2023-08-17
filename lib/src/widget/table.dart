@@ -193,15 +193,19 @@ class _ExpandableTableState extends State<ExpandableTable> {
       child: Consumer<ExpandableTableController>(
         builder: (context, controller, child) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            controller.updateValues(
-              firstHeaderCell: widget.firstHeaderCell!,
-              headers: widget.headers!,
-              rows: widget.rows!,
-              firstColumnWidth: widget.firstColumnWidth,
-              defaultsColumnWidth: widget.defaultsColumnWidth,
-              defaultsRowHeight: widget.defaultsRowHeight,
-              headerHeight: widget.headerHeight,
-            );
+            if (widget.controller == null) {
+              if (controller.tableRows.length != widget.rows!.length) {
+                controller.updateValues(
+                  firstHeaderCell: widget.firstHeaderCell!,
+                  headers: widget.headers!,
+                  rows: widget.rows!,
+                  firstColumnWidth: widget.firstColumnWidth,
+                  defaultsColumnWidth: widget.defaultsColumnWidth,
+                  defaultsRowHeight: widget.defaultsRowHeight,
+                  headerHeight: widget.headerHeight,
+                );
+              }
+            }
           });
           return const InternalTable();
         },
