@@ -127,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return ExpandableTable(
-      footer: ElevatedButton(onPressed: (){}, child: const Text("Footer")),
+      footer: ElevatedButton(onPressed: () {}, child: const Text("Footer")),
       visibleScrollbar: false,
       firstHeaderCell: _buildCell('Simple\nTable'),
       headers: headers,
@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static const int columnsCount = 20;
   static const int subColumnsCount = 2;
-  static const int rowsCount = 6;
+  int rowsCount = 6;
   static const int subRowsCount = 3;
   static const int totalColumns = columnsCount + subColumnsCount;
 
@@ -194,7 +194,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return ExpandableTable(
-      footer: ElevatedButton(onPressed: (){}, child: const Text("Footer")),
+      footer: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              rowsCount = 20;
+            });
+          },
+          child: const Text("Footer")),
       firstHeaderCell: _buildCell('Expandable\nTable'),
       rows: _generateRows(rowsCount),
       headers: headers,
@@ -214,25 +220,27 @@ class _MyHomePageState extends State<MyHomePage> {
             '   Simple Table                    |                    Expandable Table'),
         centerTitle: true,
       ),
-      body: Container(
-        color: accentColor,
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: _buildSimpleTable(),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: _buildExpandableTable(),
-              ),
-            ),
-          ],
-        ),
-      ),
+      backgroundColor: accentColor,
+      body: _buildExpandableTable(),
+      // body: Container(
+      //   color: accentColor,
+      //   child: Row(
+      //     children: [
+      //       Expanded(
+      //         child: Padding(
+      //           padding: const EdgeInsets.all(20.0),
+      //           child: _buildSimpleTable(),
+      //         ),
+      //       ),
+      //       Expanded(
+      //         child: Padding(
+      //           padding: const EdgeInsets.all(20.0),
+      //           child: _buildExpandableTable(),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
