@@ -30,6 +30,9 @@ class InternalTableState extends State<InternalTable> {
   late ScrollController _firstColumnController;
   late ScrollController _restColumnsController;
 
+  final _tableKey = GlobalKey();
+  double _tableWidth = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +42,11 @@ class InternalTableState extends State<InternalTable> {
     _horizontalLinkedControllers = LinkedScrollControllerGroup();
     _restColumnsController = _horizontalLinkedControllers.addAndGet();
     _firstColumnController = _horizontalLinkedControllers.addAndGet();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final RenderBox renderBox =
+          _tableKey.currentContext!.findRenderObject() as RenderBox;
+      _tableWidth = renderBox.size.width;
+    });
   }
 
   @override
@@ -111,30 +119,38 @@ class InternalTableState extends State<InternalTable> {
                 Widget child = ListView(
                   controller: _firstColumnController,
                   physics: const ClampingScrollPhysics(),
-                  children: data.allRows
-                      .map(
-                        (e) => ChangeNotifierProvider<ExpandableTableRow>.value(
-                          value: e,
-                          builder: (context, child) =>
-                              ExpandableTableCellWidget(
-                            row: context.watch<ExpandableTableRow>(),
-                            height:
-                                context.watch<ExpandableTableRow>().height ??
-                                    data.defaultsRowHeight,
-                            width: data.firstColumnWidth,
-                            builder: context
-                                .watch<ExpandableTableRow>()
-                                .firstCell
-                                .build,
-                            onTap: () {
-                              if (!e.disableDefaultOnTapExpansion) {
-                                e.toggleExpand();
-                              }
-                            },
+                  children: [
+                    ...data.allRows
+                        .map(
+                          (e) =>
+                              ChangeNotifierProvider<ExpandableTableRow>.value(
+                            value: e,
+                            builder: (context, child) =>
+                                ExpandableTableCellWidget(
+                              row: context.watch<ExpandableTableRow>(),
+                              height:
+                                  context.watch<ExpandableTableRow>().height ??
+                                      data.defaultsRowHeight,
+                              width: data.firstColumnWidth,
+                              builder: context
+                                  .watch<ExpandableTableRow>()
+                                  .firstCell
+                                  .build,
+                              onTap: () {
+                                if (!e.disableDefaultOnTapExpansion) {
+                                  e.toggleExpand();
+                                }
+                              },
+                            ),
                           ),
-                        ),
+                        )
+                        .toList(),
+                    if (data.footer != null) ...[
+                      SizedBox(
+                        height: data.footerHeight,
                       )
-                      .toList(),
+                    ],
+                  ],
                 );
                 return data.visibleScrollbar
                     ? Scrollbar(
@@ -174,11 +190,36 @@ class InternalTableState extends State<InternalTable> {
                       Widget child = ListView(
                         controller: _restColumnsController,
                         physics: const ClampingScrollPhysics(),
-                        children: data.allRows
-                            .map(
-                              (e) => _buildRowCells(data, e),
+                        children: [
+                          ...data.allRows
+                              .map(
+                                (e) => _buildRowCells(data, e),
+                              )
+                              .toList(),
+                          if (data.footer != null) ...[
+                            SizedBox(
+                              width: (_tableWidth - data.firstColumnWidth),
+                              height: data.footerHeight,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    width:
+                                        (_tableWidth - data.firstColumnWidth),
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          right: data.firstColumnWidth),
+                                      child: Center(
+                                        child: data.footer!,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             )
-                            .toList(),
+                          ],
+                        ],
                       );
                       return data.visibleScrollbar
                           ? ScrollConfiguration(
@@ -202,6 +243,7 @@ class InternalTableState extends State<InternalTable> {
   Widget build(BuildContext context) {
     ExpandableTableController data = context.watch<ExpandableTableController>();
     return Column(
+      key: _tableKey,
       children: [
         SizedBox(
           height: data.headerHeight,

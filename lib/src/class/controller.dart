@@ -11,6 +11,7 @@ class ExpandableTableController extends ChangeNotifier {
   /// [firstHeaderCell] is the top left cell, i.e. the first header cell.
   /// `required`
   ExpandableTableCell get firstHeaderCell => _firstHeaderCell;
+
   set firstHeaderCell(ExpandableTableCell value) {
     _firstHeaderCell = value;
     notifyListeners();
@@ -130,6 +131,12 @@ class ExpandableTableController extends ChangeNotifier {
   /// Default: [10]
   final double scrollShadowSize;
 
+  /// [footerHeight] for the height of footer widget
+  final double? footerHeight;
+
+  /// [footer] is the Widget at the bottom of the rows
+  final Widget? footer;
+
   set rows(List<ExpandableTableRow> value) {
     _removeRowsListener();
     _rows = value;
@@ -148,6 +155,8 @@ class ExpandableTableController extends ChangeNotifier {
     this.scrollShadowCurve = Curves.fastOutSlowIn,
     this.scrollShadowColor = Colors.transparent,
     this.scrollShadowSize = 10,
+    this.footerHeight,
+    this.footer,
     double headerHeight = 188,
     double firstColumnWidth = 200,
     double defaultsColumnWidth = 120,

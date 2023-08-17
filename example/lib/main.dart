@@ -127,6 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return ExpandableTable(
+      visibleScrollbar: false,
       firstHeaderCell: _buildCell('Simple\nTable'),
       headers: headers,
       scrollShadowColor: accentColor,
@@ -199,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
       defaultsColumnWidth: 150,
       firstColumnWidth: 250,
       scrollShadowColor: accentColor,
+      visibleScrollbar: false,
     );
   }
 

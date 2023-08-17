@@ -92,6 +92,12 @@ class ExpandableTable extends StatefulWidget {
   /// 'optional'
   final ExpandableTableController? controller;
 
+  /// [footerHeight] for the height of footer widget
+  final double? footerHeight;
+
+  /// [footer] is the Widget at the bottom of the rows
+  final Widget? footer;
+
   /// [ExpandableTable] class constructor.
   /// Required:
   ///   - [firstHeaderCell]
@@ -112,6 +118,8 @@ class ExpandableTable extends StatefulWidget {
     this.headers,
     this.rows,
     this.controller,
+    this.footer,
+    this.footerHeight = 45.0,
     this.headerHeight = 188,
     this.firstColumnWidth = 200,
     this.defaultsColumnWidth = 120,
@@ -170,6 +178,8 @@ class _ExpandableTableState extends State<ExpandableTable> {
               defaultsColumnWidth: widget.defaultsColumnWidth,
               defaultsRowHeight: widget.defaultsRowHeight,
               headerHeight: widget.headerHeight,
+              footerHeight: widget.footerHeight,
+              footer: widget.footer,
             ),
             builder: (context, child) => const InternalTable(),
           );
