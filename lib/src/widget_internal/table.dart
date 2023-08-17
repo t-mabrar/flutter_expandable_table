@@ -42,10 +42,12 @@ class InternalTableState extends State<InternalTable> {
     _horizontalLinkedControllers = LinkedScrollControllerGroup();
     _restColumnsController = _horizontalLinkedControllers.addAndGet();
     _firstColumnController = _horizontalLinkedControllers.addAndGet();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox =
           _tableKey.currentContext!.findRenderObject() as RenderBox;
-      _tableWidth = renderBox.size.width;
+      setState(() {
+        _tableWidth = renderBox.size.width;
+      });
     });
   }
 
@@ -164,76 +166,79 @@ class InternalTableState extends State<InternalTable> {
           ),
         ),
         Expanded(
-          child: ScrollShadow(
-            size: data.scrollShadowSize,
-            scrollDirection: Axis.horizontal,
-            color: data.scrollShadowColor,
-            curve: data.scrollShadowCurve,
-            duration: data.scrollShadowDuration,
-            controller: _bodyController,
-            child: SingleChildScrollView(
-              controller: _bodyController,
-              scrollDirection: Axis.horizontal,
-              physics: const ClampingScrollPhysics(),
-              child: AnimatedContainer(
-                width: data.visibleHeadersWidth,
-                duration: data.duration,
-                curve: data.curve,
-                child: ScrollShadow(
+          child: _tableWidth == 0.0
+              ? Container()
+              : ScrollShadow(
                   size: data.scrollShadowSize,
+                  scrollDirection: Axis.horizontal,
                   color: data.scrollShadowColor,
                   curve: data.scrollShadowCurve,
                   duration: data.scrollShadowDuration,
-                  controller: _restColumnsController,
-                  child: Builder(
-                    builder: (context) {
-                      Widget child = ListView(
+                  controller: _bodyController,
+                  child: SingleChildScrollView(
+                    controller: _bodyController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const ClampingScrollPhysics(),
+                    child: AnimatedContainer(
+                      width: data.visibleHeadersWidth,
+                      duration: data.duration,
+                      curve: data.curve,
+                      child: ScrollShadow(
+                        size: data.scrollShadowSize,
+                        color: data.scrollShadowColor,
+                        curve: data.scrollShadowCurve,
+                        duration: data.scrollShadowDuration,
                         controller: _restColumnsController,
-                        physics: const ClampingScrollPhysics(),
-                        children: [
-                          ...data.allRows
-                              .map(
-                                (e) => _buildRowCells(data, e),
-                              )
-                              .toList(),
-                          if (data.footer != null) ...[
-                            SizedBox(
-                              width: (_tableWidth - data.firstColumnWidth),
-                              height: data.footerHeight,
-                              child: Stack(
-                                children: [
-                                  Positioned(
+                        child: Builder(
+                          builder: (context) {
+                            Widget child = ListView(
+                              controller: _restColumnsController,
+                              physics: const ClampingScrollPhysics(),
+                              children: [
+                                ...data.allRows
+                                    .map(
+                                      (e) => _buildRowCells(data, e),
+                                    )
+                                    .toList(),
+                                if (data.footer != null) ...[
+                                  SizedBox(
                                     width:
                                         (_tableWidth - data.firstColumnWidth),
-                                    top: 0.0,
-                                    bottom: 0.0,
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          right: data.firstColumnWidth),
-                                      child: Center(
-                                        child: data.footer!,
-                                      ),
+                                    height: data.footerHeight,
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          width: (_tableWidth -
+                                              data.firstColumnWidth),
+                                          top: 0.0,
+                                          bottom: 0.0,
+                                          child: Container(
+                                            padding: EdgeInsets.only(
+                                                right: data.firstColumnWidth),
+                                            child: Center(
+                                              child: data.footer!,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
+                                  )
                                 ],
-                              ),
-                            )
-                          ],
-                        ],
-                      );
-                      return data.visibleScrollbar
-                          ? ScrollConfiguration(
-                              behavior: ScrollConfiguration.of(context)
-                                  .copyWith(scrollbars: false),
-                              child: child,
-                            )
-                          : child;
-                    },
+                              ],
+                            );
+                            return data.visibleScrollbar
+                                ? ScrollConfiguration(
+                                    behavior: ScrollConfiguration.of(context)
+                                        .copyWith(scrollbars: false),
+                                    child: child,
+                                  )
+                                : child;
+                          },
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
         ),
       ],
     );

@@ -127,6 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return ExpandableTable(
+      footer: ElevatedButton(onPressed: (){}, child: const Text("Footer")),
       visibleScrollbar: false,
       firstHeaderCell: _buildCell('Simple\nTable'),
       headers: headers,
@@ -193,6 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return ExpandableTable(
+      footer: ElevatedButton(onPressed: (){}, child: const Text("Footer")),
       firstHeaderCell: _buildCell('Expandable\nTable'),
       rows: _generateRows(rowsCount),
       headers: headers,
