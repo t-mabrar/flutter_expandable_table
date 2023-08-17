@@ -142,6 +142,7 @@ class ExpandableTable extends StatefulWidget {
 class _ExpandableTableState extends State<ExpandableTable> {
   @override
   void initState() {
+    super.initState();
     if (widget.controller == null) {
       int totalColumns =
           widget.headers!.map((e) => e.columnsCount).fold(0, (a, b) => a + b);
@@ -153,35 +154,58 @@ class _ExpandableTableState extends State<ExpandableTable> {
         }
       }
     }
-    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant ExpandableTable oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.controller != null
-        ? ChangeNotifierProvider<ExpandableTableController>.value(
-            value: widget.controller!,
-            builder: (context, child) => const InternalTable(),
-          )
-        : ChangeNotifierProvider<ExpandableTableController>(
-            create: (context) => ExpandableTableController(
+    return MultiProvider(
+      providers: [
+        widget.controller != null
+            ? ChangeNotifierProvider<ExpandableTableController>.value(
+                value: widget.controller!,
+              )
+            : ChangeNotifierProvider<ExpandableTableController>(
+                lazy: false,
+                create: (context) => ExpandableTableController(
+                  firstHeaderCell: widget.firstHeaderCell!,
+                  headers: widget.headers!,
+                  rows: widget.rows!,
+                  duration: widget.duration,
+                  curve: widget.curve,
+                  scrollShadowDuration: widget.scrollShadowDuration,
+                  scrollShadowCurve: widget.scrollShadowCurve,
+                  scrollShadowColor: widget.scrollShadowColor,
+                  scrollShadowSize: widget.scrollShadowSize,
+                  firstColumnWidth: widget.firstColumnWidth,
+                  defaultsColumnWidth: widget.defaultsColumnWidth,
+                  defaultsRowHeight: widget.defaultsRowHeight,
+                  headerHeight: widget.headerHeight,
+                  footerHeight: widget.footerHeight,
+                  footer: widget.footer,
+                ),
+              ),
+      ],
+      child: Consumer<ExpandableTableController>(
+        builder: (context, controller, child) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            controller.updateValues(
               firstHeaderCell: widget.firstHeaderCell!,
               headers: widget.headers!,
               rows: widget.rows!,
-              duration: widget.duration,
-              curve: widget.curve,
-              scrollShadowDuration: widget.scrollShadowDuration,
-              scrollShadowCurve: widget.scrollShadowCurve,
-              scrollShadowColor: widget.scrollShadowColor,
-              scrollShadowSize: widget.scrollShadowSize,
               firstColumnWidth: widget.firstColumnWidth,
               defaultsColumnWidth: widget.defaultsColumnWidth,
               defaultsRowHeight: widget.defaultsRowHeight,
               headerHeight: widget.headerHeight,
-              footerHeight: widget.footerHeight,
-              footer: widget.footer,
-            ),
-            builder: (context, child) => const InternalTable(),
-          );
+            );
+          });
+          return const InternalTable();
+        },
+      ),
+    );
   }
 }

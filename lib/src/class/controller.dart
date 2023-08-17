@@ -144,6 +144,28 @@ class ExpandableTableController extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///
+  void updateValues({
+    required ExpandableTableCell firstHeaderCell,
+    required List<ExpandableTableHeader> headers,
+    required List<ExpandableTableRow> rows,
+    double headerHeight = 188,
+    double firstColumnWidth = 200,
+    double defaultsColumnWidth = 120,
+    double defaultsRowHeight = 50,
+  }) {
+    _firstHeaderCell = firstHeaderCell;
+    _headerHeight = headerHeight;
+    _firstColumnWidth = firstColumnWidth;
+    _defaultsColumnWidth = defaultsColumnWidth;
+    _defaultsRowHeight = defaultsRowHeight;
+    _headers = headers;
+    _rows = rows;
+    _addHeadersListener();
+    _addRowsListener();
+    notifyListeners();
+  }
+
   /// [ExpandableTableController] class constructor.
   ExpandableTableController({
     required ExpandableTableCell firstHeaderCell,
@@ -155,7 +177,7 @@ class ExpandableTableController extends ChangeNotifier {
     this.scrollShadowCurve = Curves.fastOutSlowIn,
     this.scrollShadowColor = Colors.transparent,
     this.scrollShadowSize = 10,
-    this.footerHeight,
+    this.footerHeight = 45.0,
     this.footer,
     double headerHeight = 188,
     double firstColumnWidth = 200,
