@@ -117,8 +117,8 @@ class InternalTableState extends State<InternalTable> {
             duration: data.scrollShadowDuration,
             controller: _firstColumnController,
             child: AnimatedContainer(
-            duration: data.duration,
-            curve: data.curve,
+              duration: data.duration,
+              curve: data.curve,
               width: data.firstColumnWidth,
               child: Builder(
                 builder: (context) {
@@ -128,15 +128,16 @@ class InternalTableState extends State<InternalTable> {
                     children: [
                       ...data.allRows
                           .map(
-                            (e) =>
-                                ChangeNotifierProvider<ExpandableTableRow>.value(
+                            (e) => ChangeNotifierProvider<
+                                ExpandableTableRow>.value(
                               value: e,
                               builder: (context, child) =>
                                   ExpandableTableCellWidget(
                                 row: context.watch<ExpandableTableRow>(),
-                                height:
-                                    context.watch<ExpandableTableRow>().height ??
-                                        data.defaultsRowHeight,
+                                height: context
+                                        .watch<ExpandableTableRow>()
+                                        .height ??
+                                    data.defaultsRowHeight,
                                 width: data.firstColumnWidth,
                                 builder: context
                                     .watch<ExpandableTableRow>()
@@ -173,77 +174,75 @@ class InternalTableState extends State<InternalTable> {
         Expanded(
           child: _tableWidth == 0.0
               ? Container()
-              : ScrollShadow(
-                  size: data.scrollShadowSize,
-                  scrollDirection: Axis.horizontal,
-                  color: data.scrollShadowColor,
-                  curve: data.scrollShadowCurve,
-                  duration: data.scrollShadowDuration,
-                  controller: _bodyController,
-                  child: SingleChildScrollView(
-                    controller: _bodyController,
-                    scrollDirection: Axis.horizontal,
+              : ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context)
+                      .copyWith(scrollbars: data.visibleScrollbar),
+                  child: ListView(
+                    controller: _restColumnsController,
                     physics: const ClampingScrollPhysics(),
-                    child: AnimatedContainer(
-                      width: data.visibleHeadersWidth,
-                      duration: data.duration,
-                      curve: data.curve,
-                      child: ScrollShadow(
-                        size: data.scrollShadowSize,
-                        color: data.scrollShadowColor,
-                        curve: data.scrollShadowCurve,
-                        duration: data.scrollShadowDuration,
-                        controller: _restColumnsController,
-                        child: Builder(
-                          builder: (context) {
-                            Widget child = ListView(
-                              controller: _restColumnsController,
-                              physics: const ClampingScrollPhysics(),
-                              children: [
-                                ...data.allRows
-                                    .map(
-                                      (e) => _buildRowCells(data, e),
-                                    )
-                                    .toList(),
-                                if (data.footer != null) ...[
-                                  SizedBox(
-                                    width:
-                                        (_tableWidth - data.firstColumnWidth),
-                                    height: data.footerHeight,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          width: (_tableWidth -
-                                              data.firstColumnWidth),
-                                          top: 0.0,
-                                          bottom: 0.0,
-                                          child: Container(
-                                            padding: EdgeInsets.only(
-                                                right: data.firstColumnWidth),
-                                            child: Center(
-                                              child: data.footer!,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                    children: [
+                      SingleChildScrollView(
+                        controller: _bodyController,
+                        scrollDirection: Axis.horizontal,
+                        physics: const ClampingScrollPhysics(),
+                        child: AnimatedContainer(
+                          width: data.visibleHeadersWidth,
+                          duration: data.duration,
+                          curve: data.curve,
+                          child: Builder(
+                            builder: (context) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ...data.allRows
+                                      .map(
+                                        (e) => _buildRowCells(data, e),
+                                      )
+                                      .toList(),
                                 ],
-                              ],
-                            );
-                            return data.visibleScrollbar
-                                ? ScrollConfiguration(
-                                    behavior: ScrollConfiguration.of(context)
-                                        .copyWith(scrollbars: false),
-                                    child: child,
-                                  )
-                                : child;
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
+                      if (data.footer != null) ...[
+                        SizedBox(
+                          width: (_tableWidth - data.firstColumnWidth),
+                          height: data.footerHeight,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                width: (_tableWidth - data.firstColumnWidth),
+                                top: 0.0,
+                                bottom: 0.0,
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                      right: data.firstColumnWidth),
+                                  child: Center(
+                                    child: data.footer!,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ],
                   ),
                 ),
+
+          // Builder(
+          //         builder: (context) {
+          //           Widget child =;
+          //           return data.visibleScrollbar
+          //               ? ScrollConfiguration(
+          //                   behavior: ScrollConfiguration.of(context)
+          //                       .copyWith(scrollbars: false),
+          //                   child: child,
+          //                 )
+          //               : child;
+          //         },
+          //       ),
         ),
       ],
     );
