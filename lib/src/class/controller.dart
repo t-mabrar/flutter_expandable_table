@@ -138,6 +138,18 @@ class ExpandableTableController extends ChangeNotifier {
   /// [footer] is the Widget at the bottom of the rows
   final Widget? footer;
 
+  /// [summaryBelowFooter] place[summary] above or below [footer]
+  final bool summaryBelowFooter;
+
+  /// [summaryAlignment] alignment for summary widget [summary]
+  final Alignment? summaryAlignment;
+
+  /// [summaryPadding] padding for [summary] widget might be either right or left
+  final double? summaryPadding;
+
+  /// [summary] is the Widget at the bottom of the rows below or to footer
+  final Widget? summary;
+
   set rows(List<ExpandableTableRow> value) {
     _removeRowsListener();
     tableRows = value;
@@ -155,7 +167,6 @@ class ExpandableTableController extends ChangeNotifier {
     double defaultsColumnWidth = 120,
     double defaultsRowHeight = 50,
   }) {
-    // print("Updating");
     _firstHeaderCell = firstHeaderCell;
     _headerHeight = headerHeight;
     _firstColumnWidth = firstColumnWidth;
@@ -181,6 +192,10 @@ class ExpandableTableController extends ChangeNotifier {
     this.scrollShadowSize = 10,
     this.footerHeight = 45.0,
     this.footer,
+    this.summaryBelowFooter = true,
+    this.summaryAlignment,
+    this.summaryPadding,
+    this.summary,
     double headerHeight = 188,
     double firstColumnWidth = 200,
     double defaultsColumnWidth = 120,
@@ -193,6 +208,11 @@ class ExpandableTableController extends ChangeNotifier {
     _defaultsRowHeight = defaultsRowHeight;
     _headers = headers;
     tableRows = rows;
+
+    /// todo: define local variable for Footer and its related variables
+    /// todo: define local variable for Summary and its related variables
+    /// todo: to handle the controller declaration of variable also
+    ///
     _addHeadersListener();
     _addRowsListener();
   }

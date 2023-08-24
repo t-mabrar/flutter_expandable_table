@@ -56,13 +56,13 @@ class _MyHomePageState extends State<MyHomePage> {
       child: builder != null
           ? null
           : DefaultCellCard(
-        child: Center(
-          child: Text(
-            content,
-            style: textStyle,
-          ),
-        ),
-      ),
+              child: Center(
+                child: Text(
+                  content,
+                  style: textStyle,
+                ),
+              ),
+            ),
       builder: builder,
     );
   }
@@ -85,34 +85,34 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 25.0,
               child: details.row?.children != null
                   ? AnimatedRotation(
-                duration: const Duration(milliseconds: 500),
-                turns: details.row?.childrenExpanded == true ? 0.25 : 0,
-                child: const Icon(
-                  Icons.keyboard_arrow_right,
-                  color: Colors.white,
-                ),
-              )
+                      duration: const Duration(milliseconds: 500),
+                      turns: details.row?.childrenExpanded == true ? 0.25 : 0,
+                      child: const Icon(
+                        Icons.keyboard_arrow_right,
+                        color: Colors.white,
+                      ),
+                    )
                   : null,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Wrap(
+                const Wrap(
                   spacing: 10.0,
                   children: [],
                 ),
                 const SizedBox(width: 3.0),
                 Center(
                   child: PopupMenuButton(
-                    child: Icon(
+                    child: const Icon(
                       Icons.more_vert,
                       color: Colors.white,
                     ),
                     itemBuilder: (context) => [
-                      PopupMenuItem(child: Text("Panther1")),
-                      PopupMenuItem(child: Text("Panther2")),
-                      PopupMenuItem(child: Text("Panther3")),
+                      const PopupMenuItem(child: Text("Panther1")),
+                      const PopupMenuItem(child: Text("Panther2")),
+                      const PopupMenuItem(child: Text("Panther3")),
                     ],
                   ),
                 ),
@@ -135,14 +135,14 @@ class _MyHomePageState extends State<MyHomePage> {
     bool generateLegendRow = (depth == 0 || depth == 2);
     return List.generate(
       quantity,
-          (rowIndex) => ExpandableTableRow(
+      (rowIndex) => ExpandableTableRow(
         firstCell: _buildFirstRowCell(),
         children: ((rowIndex == 3 || rowIndex == 2) && depth < 3)
             ? _generateRows(subRowsCount, depth: depth + 1)
             : null,
         cells: List<ExpandableTableCell>.generate(
           totalColumns,
-              (columnIndex) => _buildCell('Cell $rowIndex:$columnIndex'),
+          (columnIndex) => _buildCell('Cell $rowIndex:$columnIndex'),
         ),
         // legend: generateLegendRow && (rowIndex == 3 || rowIndex == 2)
         //     ? const DefaultCellCard(
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //Creation header
     List<ExpandableTableHeader> subHeader = List.generate(
       subColumnsCount,
-          (index) => ExpandableTableHeader(
+      (index) => ExpandableTableHeader(
         cell: _buildCell('Sub Column $index'),
       ),
     );
@@ -174,14 +174,18 @@ class _MyHomePageState extends State<MyHomePage> {
     //Creation header
     List<ExpandableTableHeader> headers = List.generate(
       columnsCount,
-          (index) => ExpandableTableHeader(
+      (index) => ExpandableTableHeader(
         cell: _buildCell(
             '${index == 1 ? 'Expandable\nColumn' : 'Column'} $index'),
         children: index == 1 ? subHeader : null,
       ),
     );
-
     return ExpandableTable(
+      summaryBelowFooter: false,
+      summary: const Text(
+        "Wow it works",
+        style: TextStyle(color: Colors.black),
+      ),
       footer: ElevatedButton(
           onPressed: () {
             setState(() {
@@ -194,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
       headers: headers,
       defaultsRowHeight: 60,
       defaultsColumnWidth: 150,
-      headerHeight:45.0,
+      headerHeight: 45.0,
       firstColumnWidth: 60,
       // scrollShadowColor: accentColor,
       visibleScrollbar: false,
@@ -237,8 +241,8 @@ class _MyHomePageState extends State<MyHomePage> {
 class AppCustomScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
-    PointerDeviceKind.touch,
-    PointerDeviceKind.mouse,
-    PointerDeviceKind.trackpad,
-  };
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+      };
 }

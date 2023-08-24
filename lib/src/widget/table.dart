@@ -98,6 +98,18 @@ class ExpandableTable extends StatefulWidget {
   /// [footer] is the Widget at the bottom of the rows
   final Widget? footer;
 
+  /// [summaryBelowFooter] place[summary] above or below [footer]
+  final bool summaryBelowFooter;
+
+  /// [summaryAlignment] alignment for summary widget [summary]
+  final Alignment? summaryAlignment;
+
+  /// [summaryPadding] padding for [summary] widget might be either right or left
+  final double? summaryPadding;
+
+  /// [summary] is the Widget at the bottom of the rows below or to footer
+  final Widget? summary;
+
   /// [ExpandableTable] class constructor.
   /// Required:
   ///   - [firstHeaderCell]
@@ -131,6 +143,10 @@ class ExpandableTable extends StatefulWidget {
     this.scrollShadowColor = Colors.transparent,
     this.scrollShadowSize = 10,
     this.visibleScrollbar = false,
+    this.summaryBelowFooter = true,
+    this.summaryAlignment = Alignment.centerRight,
+    this.summaryPadding = 10.0,
+    this.summary,
   })  : assert((firstHeaderCell != null && rows != null && headers != null) ||
             controller != null),
         super(key: key);
@@ -187,6 +203,10 @@ class _ExpandableTableState extends State<ExpandableTable> {
                   headerHeight: widget.headerHeight,
                   footerHeight: widget.footerHeight,
                   footer: widget.footer,
+                  summary: widget.summary,
+                  summaryAlignment: widget.summaryAlignment,
+                  summaryBelowFooter: widget.summaryBelowFooter,
+                  summaryPadding: widget.summaryPadding,
                 ),
               ),
       ],

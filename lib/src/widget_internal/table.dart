@@ -196,7 +196,8 @@ class InternalTableState extends State<InternalTable> {
                                 children: [
                                   ...data.allRows
                                       .map(
-                                        (e) => _buildRowCells(data, e),
+                                        (eachRowData) =>
+                                            _buildRowCells(data, eachRowData),
                                       )
                                       .toList(),
                                 ],
@@ -205,6 +206,20 @@ class InternalTableState extends State<InternalTable> {
                           ),
                         ),
                       ),
+                      if (data.summary != null) ...[
+                        if (!data.summaryBelowFooter) ...[
+                          const SizedBox(height: 10.0),
+                          Align(
+                            alignment:
+                                data.summaryAlignment ?? Alignment.center,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: data.summaryPadding ?? 10.0),
+                              child: data.summary,
+                            ),
+                          )
+                        ]
+                      ],
                       if (data.footer != null) ...[
                         SizedBox(
                           width: (_tableWidth - data.firstColumnWidth),
@@ -227,22 +242,21 @@ class InternalTableState extends State<InternalTable> {
                           ),
                         )
                       ],
+                      if (data.summary != null) ...[
+                        if (data.summaryBelowFooter) ...[
+                          Align(
+                            alignment:
+                                data.summaryAlignment ?? Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: data.summary,
+                            ),
+                          )
+                        ]
+                      ],
                     ],
                   ),
                 ),
-
-          // Builder(
-          //         builder: (context) {
-          //           Widget child =;
-          //           return data.visibleScrollbar
-          //               ? ScrollConfiguration(
-          //                   behavior: ScrollConfiguration.of(context)
-          //                       .copyWith(scrollbars: false),
-          //                   child: child,
-          //                 )
-          //               : child;
-          //         },
-          //       ),
         ),
       ],
     );
