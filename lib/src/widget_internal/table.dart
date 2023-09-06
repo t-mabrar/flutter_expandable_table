@@ -110,64 +110,56 @@ class InternalTableState extends State<InternalTable> {
       children: [
         SizedBox(
           width: data.firstColumnWidth,
-          child: ScrollShadow(
-            size: data.scrollShadowSize,
-            color: data.scrollShadowColor,
-            curve: data.scrollShadowCurve,
-            duration: data.scrollShadowDuration,
-            controller: _firstColumnController,
-            child: AnimatedContainer(
-              duration: data.duration,
-              curve: data.curve,
-              width: data.firstColumnWidth,
-              child: Builder(
-                builder: (context) {
-                  Widget child = ListView(
-                    controller: _firstColumnController,
-                    physics: const ClampingScrollPhysics(),
-                    children: [
-                      ...data.allRows
-                          .map(
-                            (e) => ChangeNotifierProvider<
-                                ExpandableTableRow>.value(
-                              value: e,
-                              builder: (context, child) =>
-                                  ExpandableTableCellWidget(
-                                row: context.watch<ExpandableTableRow>(),
-                                height: context
-                                        .watch<ExpandableTableRow>()
-                                        .height ??
-                                    data.defaultsRowHeight,
-                                width: data.firstColumnWidth,
-                                builder: context
-                                    .watch<ExpandableTableRow>()
-                                    .firstCell
-                                    .build,
-                                onTap: () {
-                                  if (!e.disableDefaultOnTapExpansion) {
-                                    e.toggleExpand();
-                                  }
-                                },
-                              ),
+          child: AnimatedContainer(
+            duration: data.duration,
+            curve: data.curve,
+            width: data.firstColumnWidth,
+            child: Builder(
+              builder: (context) {
+                Widget child = ListView(
+                  controller: _firstColumnController,
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    ...data.allRows
+                        .map(
+                          (e) =>
+                              ChangeNotifierProvider<ExpandableTableRow>.value(
+                            value: e,
+                            builder: (context, child) =>
+                                ExpandableTableCellWidget(
+                              row: context.watch<ExpandableTableRow>(),
+                              height:
+                                  context.watch<ExpandableTableRow>().height ??
+                                      data.defaultsRowHeight,
+                              width: data.firstColumnWidth,
+                              builder: context
+                                  .watch<ExpandableTableRow>()
+                                  .firstCell
+                                  .build,
+                              onTap: () {
+                                if (!e.disableDefaultOnTapExpansion) {
+                                  e.toggleExpand();
+                                }
+                              },
                             ),
-                          )
-                          .toList(),
-                      if (data.footer != null) ...[
-                        SizedBox(
-                          height: data.footerHeight,
+                          ),
                         )
-                      ],
+                        .toList(),
+                    if (data.footer != null) ...[
+                      SizedBox(
+                        height: data.footerHeight,
+                      )
                     ],
-                  );
-                  return data.visibleScrollbar
-                      ? Scrollbar(
-                          thumbVisibility: true,
-                          controller: _firstColumnController,
-                          child: child,
-                        )
-                      : child;
-                },
-              ),
+                  ],
+                );
+                return data.visibleScrollbar
+                    ? Scrollbar(
+                        thumbVisibility: true,
+                        controller: _firstColumnController,
+                        child: child,
+                      )
+                    : child;
+              },
             ),
           ),
         ),
@@ -278,30 +270,22 @@ class InternalTableState extends State<InternalTable> {
                 builder: data.firstHeaderCell.build,
               ),
               Expanded(
-                child: ScrollShadow(
-                  size: data.scrollShadowSize,
-                  scrollDirection: Axis.horizontal,
-                  color: data.scrollShadowColor,
-                  curve: data.scrollShadowCurve,
-                  duration: data.scrollShadowDuration,
-                  controller: _headController,
-                  child: Builder(
-                    builder: (context) {
-                      Widget child = ListView(
-                        controller: _headController,
-                        physics: const ClampingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        children: _buildHeaderCells(data),
-                      );
-                      return data.visibleScrollbar
-                          ? Scrollbar(
-                              thumbVisibility: true,
-                              controller: _headController,
-                              child: child,
-                            )
-                          : child;
-                    },
-                  ),
+                child: Builder(
+                  builder: (context) {
+                    Widget child = ListView(
+                      controller: _headController,
+                      physics: const ClampingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      children: _buildHeaderCells(data),
+                    );
+                    return data.visibleScrollbar
+                        ? Scrollbar(
+                            thumbVisibility: true,
+                            controller: _headController,
+                            child: child,
+                          )
+                        : child;
+                  },
                 ),
               ),
             ],
